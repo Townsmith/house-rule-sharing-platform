@@ -9,10 +9,10 @@ The project consists of two parts, house-rule-platform and house-rule-data. In b
 You will also need to install XAMMP and create a database for strapi to work with. You will have to figure out how to connect the existing strapi project to your new database.
 
 Once everything is installed and setup, the following command start the project:
-> Start XAMMP and launch Apache and MySQL there.
-> Navigate to house-rule-data and in that folder execute <npm run develop>
-> Navigate to house-rule-platform and execute <node bggServer.js>
-> Navigate to house-rule-platform and execute <ng serve>
+- Start XAMMP and launch Apache and MySQL there.
+- Navigate to house-rule-data and in that folder execute <npm run develop>
+- Navigate to house-rule-platform and execute <node bggServer.js>
+- Navigate to house-rule-platform and execute <ng serve>
 
 Most likely, something will go wrong during this and the project will not start. If you run into issues contact me under: christopher.adam@townsmith.de
 Least I can do is help with the setup.
