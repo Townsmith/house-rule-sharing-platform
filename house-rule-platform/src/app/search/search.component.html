@@ -1,0 +1,16 @@
+<h1 class="mt-3" *ngIf="!explore">{{playtest ? 'House Rule Playtest Search' : 'House Rule Search'}}</h1>
+<hr-searchbar [class.d-none]="explore" [fullList]="allHouseRules" [DBTags]="DBTags" [DBCats]="DBCats" (filteredList)="filteredList = $event; first = false;" [playtesting]="playtest" [explore]="explore">
+</hr-searchbar>
+<div class="row w-100 m-0">
+  <div class="col-12 p-5 text-center" *ngIf="explore">
+    <h1>Explore there randomly selected house rules!</h1>
+  </div>
+  <house-rule-card *ngFor="let rule of filteredList" [hr]="rule" class="col-12 col-xl-6 pb-4">
+  </house-rule-card>
+  <div *ngIf="filteredList.length === 0 && !first" style="text-align: center; padding: 10vh; font-size: 20px;">
+    No house rules matched your search criteria. Try <a routerLink="/explore/true">exploring some rules!</a>
+  </div>
+  <div *ngIf="filteredList.length === 0 && first" style="text-align: center; padding: 10vh; font-size: 20px;">
+    Please enter a search term to see house rules.
+  </div>
+</div>

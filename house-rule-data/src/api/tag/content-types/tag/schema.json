@@ -1,0 +1,25 @@
+{
+  "kind": "collectionType",
+  "collectionName": "tags",
+  "info": {
+    "singularName": "tag",
+    "pluralName": "tags",
+    "displayName": "Tag",
+    "description": ""
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "name": {
+      "type": "string"
+    },
+    "house_rules": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::house-rule.house-rule",
+      "mappedBy": "tags"
+    }
+  }
+}

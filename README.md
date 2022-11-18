@@ -16,3 +16,6 @@ Once everything is installed and setup, the following command start the project:
 
 Most likely, something will go wrong during this and the project will not start. If you run into issues contact me under: christopher.adam@townsmith.de
 Least I can do is help with the setup.
+
+
+Inside the house-rule-platform folder, you will find a 'data' folder in which all TS files can be found that define all objects coming from the Strapi API and BGG API. They are currently class based and it might be favorable and cleaner to redo these as interfaces.

@@ -1,0 +1,13 @@
+<div class="pill-container" [class.active]="active">
+  <div style="text-align: center; white-space: nowrap">
+    {{tag.name}}
+  </div>
+  <div *ngIf="showRemove" class="d-flex justify-content-center align-items-center" (click)="close.emit()"
+       style="background-color: #ff8f00; border-radius: 50%; color: black; margin-left: 0.4rem"
+  >
+    <span class="material-icons" style="font-size: 1rem; cursor: pointer">
+      clear
+    </span>
+  </div>
+
+</div>

@@ -1,0 +1,132 @@
+{
+  "kind": "collectionType",
+  "collectionName": "house_rules",
+  "info": {
+    "singularName": "house-rule",
+    "pluralName": "house-rules",
+    "displayName": "house rule",
+    "description": ""
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "title": {
+      "type": "string",
+      "required": true
+    },
+    "description": {
+      "type": "text",
+      "required": true
+    },
+    "thumbnail": {
+      "type": "media",
+      "multiple": false,
+      "required": false,
+      "allowedTypes": [
+        "images"
+      ]
+    },
+    "carousel": {
+      "type": "media",
+      "multiple": true,
+      "required": false,
+      "allowedTypes": [
+        "images"
+      ]
+    },
+    "officialRulesDescription": {
+      "type": "text"
+    },
+    "testing": {
+      "type": "boolean"
+    },
+    "userAddedTags": {
+      "type": "json"
+    },
+    "author": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "plugin::users-permissions.user",
+      "inversedBy": "house_rules"
+    },
+    "user_favorites": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "plugin::users-permissions.user",
+      "mappedBy": "favorite_rules"
+    },
+    "user_likes": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "plugin::users-permissions.user",
+      "mappedBy": "liked_rules"
+    },
+    "user_dislikes": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "plugin::users-permissions.user",
+      "mappedBy": "disliked_rules"
+    },
+    "reviews": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::review.review",
+      "mappedBy": "house_rule"
+    },
+    "video_embedding": {
+      "type": "richtext"
+    },
+    "tags": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::tag.tag",
+      "inversedBy": "house_rules"
+    },
+    "parent": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::house-rule.house-rule",
+      "inversedBy": "variants"
+    },
+    "variants": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::house-rule.house-rule",
+      "mappedBy": "parent"
+    },
+    "complexity": {
+      "type": "integer"
+    },
+    "officialRulesLink": {
+      "type": "text"
+    },
+    "BGGGameID": {
+      "type": "integer"
+    },
+    "game_info": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::game-info.game-info",
+      "inversedBy": "house_rules"
+    },
+    "comments": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::comment.comment",
+      "mappedBy": "house_rule"
+    },
+    "gallery": {
+      "type": "media",
+      "multiple": true,
+      "required": false,
+      "allowedTypes": [
+        "images"
+      ]
+    },
+    "version": {
+      "type": "decimal"
+    }
+  }
+}

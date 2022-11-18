@@ -1,0 +1,30 @@
+<div class="ba-navbar">
+  <a routerLink="home">
+    <div class="header-icon">
+    <span class="material-icons" style="height: 25px">
+      home
+    </span>
+    </div>
+  </a>
+  <div class="navbar-item-bar">
+<!--    <a class="navbar-item" routerLink="analysis">ANALYSIS</a>-->
+    <a class="navbar-item" [class.active]="router.url.startsWith('search')"  routerLink="search">SEARCH</a>
+    <a class="navbar-item" [class.active]="router.url.startsWith('explore/true')"  routerLink="explore/true">EXPLORE</a>
+    <a class="navbar-item" [class.active]="router.url.startsWith('search/true')"  routerLink="search/true">PLAYTEST</a>
+    <a class="navbar-item" [class.active]="router.url.startsWith('create')"  routerLink="create">CREATE</a>
+  </div>
+  <a routerLink="login" *ngIf="!user.auth" matTooltip="Login">
+    <div class="header-icon" >
+    <span class="material-icons" style="height: 25px">
+      login
+    </span>
+    </div>
+  </a>
+  <a routerLink="user" *ngIf="user.auth" matTooltip="Profile">
+    <div class="header-icon" >
+    <span class="material-icons" style="height: 25px">
+      person
+    </span>
+    </div>
+  </a>
+</div>

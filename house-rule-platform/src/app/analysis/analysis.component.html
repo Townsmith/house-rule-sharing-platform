@@ -1,0 +1,129 @@
+
+
+<div class="content row pt-2">
+<!--  HEADER-->
+  <div class="col-12 d-flex">
+    <button class="btn btn-primary" (click)="content='Main'" [class.active]="content === 'Main'">
+      Main
+    </button>
+    <button class="btn btn-primary" (click)="content='Likerts'" [class.active]="content === 'Likerts'">
+      Likerts
+    </button>
+    <button class="btn btn-primary" (click)="content='Measures'" [class.active]="content === 'Measures'">
+      Measures
+    </button>
+    <button class="btn btn-primary" (click)="content='Downloads'" [class.active]="content === 'Downloads'">
+      Downloads
+    </button>
+  </div>
+<!--  ACTIONS-->
+  <div class="col-12" *ngIf="content === 'Downloads'">
+    <div class="row mt-3">
+      <label class="col-3">
+        Likert Subquestion Codes
+      </label>
+      <input class="col-6" type="text" [(ngModel)]="likertCodes">
+      <button class="col-3" (click)="downloadLikertTranslationsCodes()">
+        Likert Subquestion Download
+      </button>
+    </div>
+    <div class="row mt-3">
+      <label class="col-3">
+        Text Question Codes
+      </label>
+      <div class="col-6">
+        <div class="row">
+          <input class="col-12" type="text" [(ngModel)]="textCodes" >
+        </div>
+      </div>
+      <button (click)="downloadTextQuestionCodes()" class="col-3">
+        Test Question Download
+      </button>
+    </div>
+    <div class="row mt-3">
+      <label class="col-3">
+        Annotations
+      </label>
+      <input class="col-9" type="text" [(ngModel)]="annotationCodes">
+      <label class="col-3">
+        Responses
+      </label>
+      <input class="col-9" type="text" [(ngModel)]="responseCodes">
+      <label class="col-3">
+        BGG
+      </label>
+      <input class="col-9" type="text" [(ngModel)]="bggCodes">
+      <div class="col-9">
+      </div>
+      <button class="col-3" (click)="downloadCombined()">
+        Download Combined
+      </button>
+    </div>
+  </div>
+  <div class="col-12" *ngIf="content === 'Main'">
+    <div>
+      {{queryRes}}
+    </div>
+    <ul>
+      <li *ngFor="let pair of numbers | keyvalue: originalOrder">
+        {{pair.key}}: {{pair.value}}
+      </li>
+    </ul>
+  </div>
+  <hr>
+  <ng-container *ngIf="content === 'Likerts'">
+
+    <div class="col-12">
+      <h3>Mean Compares and Correlations</h3>
+      <p>
+        There was not a significant relationship between how much the participants' liked creating house rules and their interest in sharing their house rules on the platform, r = -0.97, p = 0.62.
+      </p>
+    </div>
+
+    <ng-container *ngFor="let keyVal of likertMapper | keyvalue : originalOrder; let i = index;">
+      <app-likert-display
+        [index]="i"
+        [title]="keyVal.key"
+        [map]="keyVal.value">
+      </app-likert-display>
+      <hr>
+    </ng-container>
+  </ng-container>
+  <ng-container *ngIf="content === 'Measures'">
+    <div class="col-12 mb-5" *ngFor="let res of filteredResponses">
+      <h2 style="color: #ff8f00">{{res.id}}</h2>
+      <div class="row">
+        <div class="col-4">
+          <h4>
+            BFI
+          </h4>
+          <ul>
+            <li *ngFor="let trait of bfiMapper.get(res.id) | keyvalue: originalOrder">
+              {{trait.key}}: {{trait.value}}
+            </li>
+          </ul>
+        </div>
+        <div class="col-4">
+          <h4>
+            IMG
+          </h4>
+          <ul>
+            <li *ngFor="let trait of IMGMapper.get(res.id) | keyvalue: originalOrder">
+              {{trait.key}}: {{trait.value}}
+            </li>
+          </ul>
+        </div>
+        <div class="col-4">
+          <h4>
+            HCI
+          </h4>
+          <ul>
+            <li *ngFor="let trait of HCIMapper.get(res.id) | keyvalue: originalOrder">
+              {{trait.key}}: {{trait.value}}
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </ng-container>
+</div>

@@ -1,0 +1,79 @@
+<div class="col-12">
+  <h4>
+    Result {{index}}: {{title}}
+  </h4>
+  <!--  AUSWERTUNG HOUSE RULE INTEREST-->
+  <p *ngIf="title === 'House Rule Interest'">
+    {{getHouseRuleInterestAuswertung()}}
+  </p>
+  <!--  AUSWERTUNG APP INTEREST-->
+  <p *ngIf="title === 'App Interest'">
+    {{getAppInterestAuswertung()}}
+  </p>
+
+
+  <table data-table-theme="dark zebra">
+    <p *ngFor="let question of map | keyvalue : ARSorted; let i = index">
+        {{i + 1}}&
+        \makecell[l]{{'{' + question.key + '}'}}&
+        {{question.value.mean}}&
+        {{question.value.median}}&
+        {{question.value.dev}}&
+        {{question.value.agreement*100}}\%\\
+    </p>
+  </table>
+  <table data-table-theme="dark zebra">
+    <tr>
+      <th>
+        Rank
+      </th>
+      <th>
+        Statement
+      </th>
+      <th>
+        M
+      </th>
+      <th>
+        Mdn
+      </th>
+      <th>
+        SD
+      </th>
+      <th>
+        AR
+      </th>
+      <th>
+        TTest (Exp 3)
+      </th>
+      <th>
+        Signifikant
+      </th>
+    </tr>
+    <tr *ngFor="let question of map | keyvalue : ARSorted; let i = index">
+      <td>
+        {{i + 1}}
+      </td>
+      <td>
+        {{question.key}}
+      </td>
+      <td>
+        {{question.value.mean}}
+      </td>
+      <td>
+        {{question.value.median}}
+      </td>
+      <td>
+        {{question.value.dev}}
+      </td>
+      <td>
+        {{question.value.agreement}}
+      </td>
+      <td>
+        {{question.value.ttest}}
+      </td>
+      <td>
+        {{question.value.significant}}
+      </td>
+    </tr>
+  </table>
+</div>

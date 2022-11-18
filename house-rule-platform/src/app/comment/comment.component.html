@@ -1,0 +1,19 @@
+<div class="review-card mat-shadow d-flex">
+  <div class="review-header d-flex flex-column flex-lg-row justify-content-between">
+    <div class="d-flex flex-row" style="padding-left: 0.6vw">
+
+      <div class="d-flex align-items-center px-2">
+        {{comment.createdAtDate.toDateString()}}
+      </div>
+      <!--        AUTHOR-->
+      <div class="d-flex align-items-center px-2">
+        <a routerLink="/user/{{comment.author.id}}">by {{comment.author.username}}</a>
+      </div>
+
+    </div>
+
+  </div>
+  <div class="p-3 overflow-hidden">
+    {{comment.text}}
+  </div>
+</div>

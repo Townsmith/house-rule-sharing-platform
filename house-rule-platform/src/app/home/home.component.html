@@ -1,0 +1,25 @@
+
+<div class="row w-100 pt-3 m-0">
+  <div *ngIf="topRule" class="col-lg-6 col-12 flex-column p-2 mb-2 mb-lg-0 mat-shadow border-round" >
+    <h1>
+      Top rated Rule this month
+    </h1>
+    <house-rule-card [hr]="topRule">
+    </house-rule-card>
+  </div>
+  <div *ngIf="topDiscussedRule" class="col-lg-6 col-12 flex-column p-2 mb-2 mb-lg-0 mat-shadow border-round" >
+    <h1>
+      Most discussed Rule this month
+    </h1>
+    <house-rule-card [hr]="topDiscussedRule">
+    </house-rule-card>
+  </div>
+  <div *ngIf="topDiscussedRule" class="col-12 flex-column p-2 mb-2 mb-lg-0 mat-shadow border-round" >
+    <h1>
+      Top Rule for the Latest Board Game
+    </h1>
+    <house-rule-card [hr]="topGameRule">
+    </house-rule-card>
+  </div>
+
+</div>

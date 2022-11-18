@@ -1,0 +1,25 @@
+{
+  "kind": "collectionType",
+  "collectionName": "game_categories",
+  "info": {
+    "singularName": "game-category",
+    "pluralName": "game-categories",
+    "displayName": "Game Category"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "name": {
+      "type": "string",
+      "unique": true
+    },
+    "game_infos": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::game-info.game-info",
+      "mappedBy": "game_categories"
+    }
+  }
+}

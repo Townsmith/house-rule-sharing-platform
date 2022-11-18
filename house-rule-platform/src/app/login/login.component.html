@@ -1,0 +1,62 @@
+<div class="d-lg-flex half">
+  <div class="bg order-1 order-md-2" style="background-image: url('assets/img/stockBoardgames.jpg');"></div>
+  <div class="contents order-2 order-md-1">
+
+    <div class="container">
+      <div class="row align-items-center justify-content-center">
+        <div class="col-md-7">
+          <h3>Login to <strong>My House.My Rules.</strong></h3>
+          <!--          <p class="mb-4">Lorem ipsum dolor sit amet elit. Sapiente sit aut eos consectetur adipisicing.</p>-->
+          <form action="#" method="post" [formGroup]="logInForm" (ngSubmit)="login()">
+              <mat-form-field>
+                <mat-label for="username">Username</mat-label>
+                <input matInput type="text" class="form-control" placeholder="your-email@gmail.com" id="username"
+                       formControlName="user">
+              </mat-form-field>
+              <mat-form-field>
+                <mat-label for="password">Password</mat-label>
+                <input matInput type="password" class="form-control" placeholder="Your Password" id="password" formControlName="pw">
+              </mat-form-field>
+
+            <!--            <div class="d-flex mb-5 align-items-center">-->
+            <!--              <label class="control control&#45;&#45;checkbox mb-0"><span class="caption">Remember me</span>-->
+            <!--                <input type="checkbox" checked="checked"/>-->
+            <!--                <div class="control__indicator"></div>-->
+            <!--              </label>-->
+            <!--              <span class="ml-auto"><a href="#" class="forgot-pass">Forgot Password</a></span>-->
+            <!--            </div>-->
+
+            <button class="button-primary next-save-buton effect effect-5" type="submit" [disabled]="!logInForm.valid">
+              Login
+            </button>
+          </form>
+        </div>
+        <div class="col-md-7">
+          <h3>Or Register</h3>
+          <!--          <p class="mb-4">Lorem ipsum dolor sit amet elit. Sapiente sit aut eos consectetur adipisicing.</p>-->
+          <form action="#" method="post" [formGroup]="registerForm" (ngSubmit)="register()">
+            <mat-form-field>
+              <mat-label for="usernameReg">Username</mat-label>
+              <input matInput type="text" placeholder="MrKillerx_Xx" id="usernameReg" [formControl]="usernameReg">
+            </mat-form-field>
+            <mat-form-field>
+              <mat-label for="emailReg">Email</mat-label>
+              <input matInput type="text" placeholder="your-email@gmail.com" id="emailReg" [formControl]="emailReg">
+            </mat-form-field>
+            <mat-form-field>
+              <mat-label for="passwordReg">Password</mat-label>
+              <input matInput type="password" placeholder="Your Password" id="passwordReg" [formControl]="pwReg">
+            </mat-form-field>
+
+            <button class="button-primary next-save-buton effect effect-5" type="submit"
+                    [disabled]="!registerForm.valid">
+              Register
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+</div>

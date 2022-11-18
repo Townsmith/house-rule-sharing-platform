@@ -1,0 +1,402 @@
+<div class="row">
+  <ng-container *ngIf="true">
+    <!--  Image and QuickInfo-->
+    <div class="col-12">
+
+      <div [style]="styleBinder(hr, 30)">
+        <!--        ACTIONS GO HERE-->
+        <div class="ribbon ribbon-primary ribbon-right" *ngIf="hr?.testing">
+          Playtesting
+        </div>
+        <div *ngIf="!preview && user.getInfo()" class="position-absolute p-1 p-lg-3"
+             style="top: 10px; left: 10px; background-color: rgba(0,0,0,0.6); border-radius: 10px">
+          <span class="material-icons action-icon" matTooltip="Bookmark rule" [class.active]="ruleIsBookMarked()"
+                (click)="bookmarkHouseRule()">
+            bookmark
+          </span>
+          <span class="material-icons action-icon" matTooltip="Share rule" (click)="shareRule()">
+            share
+          </span>
+<!--          <span *ngIf="hr.authorFilled.id == user.getID()" class="material-icons action-icon" matTooltip="Edit Rule" (click)="editRule()">-->
+<!--            edit-->
+<!--          </span>-->
+          <span *ngIf="hr.authorFilled.id == user.getID()" class="material-icons action-icon" matTooltip="Delete Rule" (click)="deleteRule()">
+            delete
+          </span>
+        </div>
+        <div
+          class="h-100 w-100 d-flex flex-lg-row flex-column justify-content-lg-between justify-content-end align-items-lg-end align-items-start blend-container p-2">
+          <div class="d-flex title-background">
+            <!--            Rating goes here-->
+            <div class="d-flex flex-column align-items-center mx-lg-3 mx-1" *ngIf="!preview">
+              <span class="material-icons action-icon" [class.active]="ruleIsLiked()" (click)="upvote()">
+                keyboard_double_arrow_up
+              </span>
+              {{preview ? 1337 : hr?.rating}}
+              <span class="material-icons action-icon" [class.active]="ruleIsDisliked()" (click)="downvote()">
+                keyboard_double_arrow_down
+              </span>
+            </div>
+            <!--          TITLE GOES HERE-->
+            <div class="d-flex align-items-start flex-column justify-content-end">
+              <div class="mb-4 house-rule-title">
+                {{hr?.title}}
+              </div>
+              <div>
+                for
+                <a *ngIf="gameInfo!== undefined"
+                   style="font-size: 1.4rem"
+                   matTooltipPosition="right"
+                   matTooltip="Learn more on BoardGameGeek.com"
+                   target="_blank" href="https://boardgamegeek.com/boardgame/{{hr?.BGGGameID}}"
+                   (click)="$event.stopPropagation();">
+                  {{gameInfo?.name}} ({{gameInfo?.yearpublished}})
+                </a>
+              </div>
+
+            </div>
+
+          </div>
+
+          <!--          QUICK INFO GOES HERE-->
+          <div>
+            <div class="d-flex align-items-center justify-content-end mx-3">
+              <div class="d-flex flex-row align-items-center">
+                Author Complexity Rating: &nbsp;
+                <span *ngFor="let num of [].constructor(hr.complexity)" class="material-icons">
+              settings_applications
+            </span>
+                <span *ngFor="let num of [].constructor(5-hr.complexity)" class="material-icons">
+              crop_square
+            </span>
+              </div>
+            </div>
+            <div class="d-flex align-items-center mx-3">
+              <div class="d-flex flex-row align-items-center">
+                Community Complexity Rating: &nbsp;
+                <ng-container *ngIf="hr.reviewComplexity !== 0">
+                  <span *ngFor="let num of [].constructor(hr.reviewComplexity)" class="material-icons">
+              settings_applications
+            </span>
+                  <span *ngFor="let num of [].constructor(5-hr.reviewComplexity)" class="material-icons">
+              crop_square
+            </span>
+                </ng-container>
+                <ng-container *ngIf="hr.reviewComplexity == 0">
+                  Not yet available
+                </ng-container>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-12 d-block d-lg-none">
+      <div style="background-color: black">
+        <!--      User-->
+        <div class="flex-row align-items-end d-flex p-2">
+          <a class="d-flex align-items-center" routerLink="/user/{{hr?.authorFilled.id}}">
+          <span class="material-icons">
+            person
+          </span>
+            <div style="font-size: 1.4rem;">
+              {{hr?.authorFilled.username}}
+            </div>
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!--  User and Tags-->
+    <div class="col-12">
+      <div class="d-flex flex-column flex-lg-row align-content-between justify-content-lg-between p-2"
+           style="background-color: black">
+        <!--      Tags-->
+        <div class="d-flex flex-wrap flex-grow-1">
+          <p *ngIf="hr?.tagsFilled.length === 0" class="text-muted">
+            This house rule has no tags
+          </p>
+          <tag-pill class="pb-2" *ngFor="let tag of hr?.tagsFilled" [tag]="tag"></tag-pill>
+          <tag-pill class="pb-2" *ngFor="let tag of hr?.userAddedTags" [tag]="tag"></tag-pill>
+        </div>
+        <div class="d-flex flex-column p-2">
+          <div style="font-size: 15px">
+            <!--          Parent Link-->
+            <ng-container *ngIf="hr?.parentFilled">
+              {{hr?.version ? "Version " + hr?.version + " of" : "Variant of"}}&nbsp;
+              <a href="http://localhost:4200/rule/{{hr?.parent}}">
+                {{hr?.parentFilled?.title}}
+              </a>
+            </ng-container>
+          </div>
+          <div style="font-size: 12px">
+            <!--          Child Links-->
+            <ng-container *ngIf="hr?.variants.length > 0">
+              Inspired these variants:&nbsp;
+              <ng-container *ngIf="hr?.variants.length > 0">
+                <a *ngFor="let rule of hr?.variantsFilled; let i = index" routerLink="/rule/{{rule.id}}">
+                  {{rule.title + (i === hr?.variantsFilled.length ? '' : ', ')}}
+                </a>
+              </ng-container>
+              <ng-container *ngIf="hr?.variants.length === 0">
+                None
+              </ng-container>
+            </ng-container>
+          </div>
+        </div>
+        <div class="form-container d-none d-lg-block flex-shrink-0 flex-column align-items-end"
+             style="min-width: 0 !important;">
+          <a class="d-flex align-items-center" routerLink="/user/{{hr?.authorFilled.id}}">
+          <span class="material-icons">
+            person
+          </span>
+            <div style="font-size: 1.4rem;">
+              {{hr?.authorFilled.username}}
+            </div>
+          </a>
+          <div style="font-size: 0.8rem">
+            {{hr?.authorFilled.title}}
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-12">
+      <div class="d-flex flex-lg-row flex-column p-3" style="background-color: black">
+        <div class="col-12 col-lg-6 p-3" *ngIf="hr?.video_embedding !== ''">
+          <h1 class="m-0">
+            About this house rule
+          </h1>
+          <hr class="my-2">
+          {{hr?.description}}
+        </div>
+        <div class="col-12 p-3" *ngIf="hr?.video_embedding == ''">
+          <h1 class="m-0">
+            About this house rule
+          </h1>
+          <hr class="my-2">
+          {{hr?.description}}
+        </div>
+        <div *ngIf="hr?.video_embedding !== ''" class="col-12 col-lg-6" style="height: 32vh;">
+            <iframe width="100%" height="100%" [src]="hr?.video_embedding | safe" title="Harbingers - Gul'dan"
+                    frameborder="0"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowfullscreen></iframe>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-12">
+      <div style="background-color: black;" class="d-flex justify-content-center align-items-center">
+        <ngb-carousel *ngIf="hr.galleryData">
+          <ng-template ngbSlide *ngFor="let img of hr.galleryData">
+            <div class="picsum-img-wrapper">
+              <img style="max-height: 30vh" height="auto" [src]="environment.fileURL + '' + this.getBestImg(img)" alt="Random first slide" />
+            </div>
+          </ng-template>
+        </ngb-carousel>
+      </div>
+    </div>
+
+    <!--  Links-->
+    <div class="col-12" *ngIf="hr?.officialRulesLink || hr?.officialRulesDescription">
+      <div class="d-flex flex-row p-3" style="background-color: black">
+        <p>
+          <strong>Official Rules Reference:</strong>
+          <ng-container *ngIf="hr?.officialRulesDescription">
+            {{hr?.officialRulesDescription}}
+          </ng-container>
+          <ng-container *ngIf="hr?.officialRulesLink">
+            <br>
+            In <a href="{{hr?.officialRulesLink}}">Offical rules for {{gameInfo?.name}} ({{gameInfo?.yearpublished}})</a>
+          </ng-container>
+        </p>
+      </div>
+    </div>
+  </ng-container>
+  <mat-tab-group *ngIf="!preview">
+    <mat-tab label="Reviews">
+      <div class="row">
+        <hr>
+        <div class="col-12 col-lg-2 d-flex pb-3">
+          <div>
+            <mat-form-field appearance="fill">
+              <mat-label>
+                Sorting
+              </mat-label>
+              <mat-select [(value)]="sorting" (valueChange)="sort()">
+                <mat-option value="Rating">
+                  By Rating
+                </mat-option>
+                <mat-option value="Date">
+                  By Latest/Oldest
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+          <div class="d-flex" matTooltip="Ascending/Descending Sorting"
+               style="padding-bottom: 1.34375em; padding-left: 10px">
+      <span class="material-icons action-icon" (click)="ascending = !ascending; sort()">
+        {{ascending ? 'arrow_upwards' : 'arrow_downwards'}}
+      </span>
+          </div>
+        </div>
+        <div class="col-4 d-none d-lg-block">
+
+        </div>
+        <div class="col-12 my-2 col-lg-2" *ngIf="user.info">
+          <button class="w-100 button-primary next-save-buton" [routerLink]="['/create/', this.hr.id, this.hr.title, this.hr.gameInfoFilled.name, -1]" *ngIf="!showReviewForm">
+            Write Rule Variation
+          </button>
+        </div>
+        <div class="col-12 my-2 col-lg-2" *ngIf="user.info && user.getID() === hr.authorFilled.id">
+          <button class="w-100 button-primary next-save-buton" [routerLink]="['/create/', this.hr.id, this.hr.title, this.hr.gameInfoFilled.name, this.hr.version + 1]" *ngIf="!showReviewForm">
+            Edit (new Version)
+          </button>
+        </div>
+        <div class="col-12 my-2 col-lg-2" *ngIf="user.info">
+          <button class="w-100 button-primary next-save-buton" (click)="showReviewForm = true;" *ngIf="!showReviewForm">
+            Write Review
+          </button>
+        </div>
+
+
+        <div class="col-12 px-lg-5" *ngIf="showReviewForm">
+          <div class="review-card m-0 mat-shadow d-flex border-orange">
+            <form>
+              <div class="review-header d-flex flex-lg-row flex-column justify-content-between">
+                <div class="d-flex align-items-center flex-grow-1" style="padding-left: 0.6vw">
+                  <div class="d-lg-flex d-none justify-content-center align-items-center" style="min-width: 1.5vw">
+                  </div>
+                  <div class="d-flex align-items-center mx-2 flex-grow-1">
+                    <mat-form-field class="w-100">
+                      <mat-label for="title">
+                        Title
+                      </mat-label>
+                      <input id="title" type="text" matInput [formControl]="titleFormControl">
+                    </mat-form-field>
+                  </div>
+
+                  <!--        AUTHOR-->
+                  <div class="d-flex align-items-center px-2">
+                    by &nbsp;<a routerLink="/user/{{user.info.id}}">{{user.info.username}}</a>
+                  </div>
+
+                </div>
+                <!--        Ratings-->
+                <div class="d-flex flex-column justify-content-evenly align-items-end px-2">
+                  <div class="d-flex flex-row align-items-center"
+                       [class.warn-outline]="qualityFormControl.invalid && qualityFormControl.touched">
+                    House Rule Quality: &nbsp;
+                    <span *ngFor="let num of [0, 1, 2, 3, 4]" (click)="setVal(num, qualityDisplay, qualityFormControl)"
+                          class="material-icons" style="cursor: pointer">
+                {{qualityDisplay[num] ? 'star' : 'star_outline'}}
+              </span>
+                  </div>
+                  <div class="d-flex flex-row align-items-center"
+                       [class.warn-outline]="complexityFormControl.invalid && complexityFormControl.touched">
+                    House Rule Complexity: &nbsp;
+                    <span *ngFor="let num of [0, 1, 2, 3, 4]"
+                          (click)="setVal(num, complexityDisplay, complexityFormControl)" class="material-icons"
+                          style="cursor: pointer">
+                {{complexityDisplay[num] ? 'settings_applications' : 'crop_square'}}
+              </span>
+                  </div>
+                </div>
+
+              </div>
+              <div class="p-3">
+                <mat-form-field class="w-100 h-100">
+                  <mat-label for="description">
+                    Review
+                  </mat-label>
+                  <textarea style="min-height: 200px" matInput [formControl]="descriptionFormControl"></textarea>
+                </mat-form-field>
+              </div>
+            </form>
+          </div>
+        </div>
+
+        <div class="col-12 px-lg-5 mt-2" style="margin-bottom: 20px" *ngIf="showReviewForm">
+          <button class="button-primary next-save-buton" (click)="saveReview()">
+            Post Review
+          </button>
+        </div>
+
+        <!--  Reviews-->
+        <div class="col-12 px-lg-5" *ngIf="hr?.reviews.length > 0">
+          <review *ngFor="let rev of hr?.reviewsFilled" [rev]="rev" [preview]="preview">
+          </review>
+        </div>
+        <div class="col-12 p-lg-5 text-muted text-center" *ngIf="hr?.reviews.length == 0">
+          This rule does not have any reviews. Write one!
+        </div>
+      </div>
+    </mat-tab>
+    <mat-tab label="Comments">
+      <div class="row w-100">
+        <hr>
+        <div class="col-12 my-2 col-lg-2">
+          <button class="w-100 button-primary next-save-buton" (click)="showCommentForm = true;" *ngIf="!showCommentForm">
+            Write Comment
+          </button>
+        </div>
+
+
+        <div class="col-12 px-lg-5" *ngIf="showCommentForm">
+          <div class="review-card m-0 mat-shadow d-flex border-orange">
+            <form>
+
+              <div class="review-header d-flex flex-lg-row flex-column justify-content-between">
+                <div class="d-flex align-items-center flex-grow-1" style="padding-left: 0.6vw">
+                  <div class="d-lg-flex d-none justify-content-center align-items-center" style="min-width: 1.5vw">
+                  </div>
+                  <div class="d-flex align-items-center mx-2 flex-grow-1">
+                    {{currentDate.getDay() + '.' + currentDate.getMonth() + '.' + currentDate.getFullYear()}}
+                  </div>
+
+                  <!--        AUTHOR-->
+                  <div class="d-flex align-items-center px-2">
+                    by &nbsp;<a routerLink="/user/{{user.info.id}}">{{user.info.username}}</a>
+                  </div>
+
+                </div>
+
+              </div>
+
+              <div class="p-3">
+                <mat-form-field class="w-100 h-100">
+                  <mat-label for="description">
+                    Comment
+                  </mat-label>
+                  <textarea style="min-height: 200px" matInput [formControl]="commentFormControl"></textarea>
+                </mat-form-field>
+              </div>
+
+            </form>
+          </div>
+        </div>
+
+        <div class="col-12 px-lg-5 pb-3 mt-2" style="margin-bottom: 20px" *ngIf="showCommentForm">
+          <button class="button-primary next-save-buton" (click)="saveComment()">
+            Post Comment
+          </button>
+        </div>
+
+        <!--  Reviews-->
+        <div class="col-12 px-lg-5" *ngIf="hr?.comments.length > 0">
+          <comment *ngFor="let comment of hr?.commentsFilled" [comment]="comment">
+          </comment>
+        </div>
+        <div class="col-12 p-lg-5 text-muted text-center" *ngIf="hr?.comments.length == 0">
+          This rule does not have any comments.
+        </div>
+      </div>
+    </mat-tab>
+  </mat-tab-group>
+
+
+
+</div>

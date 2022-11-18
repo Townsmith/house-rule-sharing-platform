@@ -1,0 +1,170 @@
+<div class="row mt-3">
+  <!--  Searchbar-->
+  <div class="col-12 col-lg-3">
+    <mat-form-field class="w-100 p-2">
+      <mat-label>
+        House Rule Title
+      </mat-label>
+      <input type="text" matInput [(ngModel)]="textSearch" (ngModelChange)="filter()">
+    </mat-form-field>
+  </div>
+
+
+<!--  BG search-->
+  <div class="col-10 col-lg-3 flex-column d-flex">
+    <mat-form-field class="w-100 p-2">
+      <mat-label for='BGG Title'>
+        Board Game Title
+        <!--                  <ng-container *ngIf="BGGTitle.invalid && BGGTitle.touched || bggBoardGame.invalid && bggBoardGame.touched">-->
+        <!--                    (required)-->
+        <!--                  </ng-container>-->
+      </mat-label>
+      <input matInput [(ngModel)]="bggSearch" id="BGG Title" type="text" (submit)="searchBGGByName()">
+    </mat-form-field>
+  </div>
+  <button class="col-2" type="submit" mat-fab color="primary"
+          matTooltip="Search"
+          matTooltipPosition="left"
+          (click)="searchBGGByName()">
+              <span class="material-icons">
+                search
+              </span>
+  </button>
+
+  <!--  SORTING-->
+  <div class="order-1 order-lg-0 col-4 d-flex align-items-center">
+    <div>
+      <mat-form-field appearance="fill">
+        <mat-label>
+          Sorting
+        </mat-label>
+        <mat-select [(value)]="sorting" (valueChange)="sort()">
+          <mat-option value="Rating">
+            By Rating
+          </mat-option>
+          <mat-option value="Reviews">
+            By Reviews
+          </mat-option>
+          <mat-option value="Complexity">
+            By Complexity
+          </mat-option>
+          <mat-option value="Date">
+            By Latest/Oldest
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+    <div class="d-flex" matTooltip="Ascending/Descending Sorting" style="padding-bottom: 1.34375em; padding-left: 10px">
+      <span class="material-icons action-icon" (click)="ascending = !ascending; sort()">
+        {{ascending ? 'arrow_upwards' : 'arrow_downwards'}}
+      </span>
+    </div>
+    <div class="d-flex flex-column">
+      <div matTooltip="Show only house rules created by board game professional" *ngIf="!forProfile">
+        <mat-checkbox color="primary" (change)="professional = $event.checked; filter()" [checked]="professional">
+          Professional
+        </mat-checkbox>
+      </div>
+      <div matTooltip="Show only house rules for games you own." *ngIf="user.bggCollection?.length > 0">
+        <mat-checkbox color="primary" (change)="owned = $event.checked; filter()" [checked]="owned">
+          For your Games
+        </mat-checkbox>
+      </div>
+    </div>
+
+  </div>
+
+  <mat-accordion id="accordion" #accordion class="mb-3 col-12" >
+    <mat-expansion-panel>
+      <mat-expansion-panel-header>
+        <h3 class="m-0">Board Games</h3>
+      </mat-expansion-panel-header>
+      <div class="d-flex flex-row flex-wrap overflow-auto m-0" style="max-height: 300px">
+        <div class="col-12 p-3 text-center" *ngIf="!showNoResults && potentialBoardGames.length === 0">
+          Please enter a board game above and press the search button.
+        </div>
+        <div class="col-12 p-3 text-center" *ngIf="showNoResults && potentialBoardGames.length === 0">
+          No Games with this name found
+        </div>
+        <div class="col-6 col-lg-3 p-3"
+             *ngFor="let bg of potentialBoardGames"
+             (click)="selectBGGGame(bg)">
+          <div class="d-flex justify-content-center bg-card"
+               [class.active]="this.filteredGame === bg">
+            <h3 class="m-0">{{bg.name?._value}} ({{bg.yearpublished?._value}})</h3>
+            <a matTooltip="Learn more on BoardGameGeek.com" target="_blank"
+               href="https://boardgamegeek.com/boardgame/{{bg._id}}" (click)="$event.stopPropagation();">
+                      <span class="mx-1 material-icons">
+                        contact_support
+                      </span>
+            </a>
+          </div>
+        </div>
+      </div>
+    </mat-expansion-panel>
+
+  </mat-accordion>
+
+  <!--  Advanced Search -->
+  <mat-accordion class="col-12 pb-3">
+    <mat-expansion-panel>
+      <mat-expansion-panel-header>
+        <h3 class="m-0">Advanced Search</h3>
+      </mat-expansion-panel-header>
+      <div class="w-100 h-100 row">
+
+        <div *ngIf="false" class="col-lg-3 col-12 p-lg-0 p-2">
+          <div *ngIf="false" matTooltip="Show house rules that are not yet release and intended for playtesting only.">
+            <mat-checkbox color="primary" (change)="playtesting = $event.checked; filter()" [checked]="playtesting">
+              Playtesting
+            </mat-checkbox>
+          </div>
+          <div matTooltip="Show only house rules created by board game professional" *ngIf="!forProfile">
+            <mat-checkbox color="primary" (change)="professional = $event.checked; filter()" [checked]="professional">
+              Professional
+            </mat-checkbox>
+          </div>
+        </div>
+
+        <div class="col-12 d-flex flex-wrap py-3">
+            <mat-label class="mx-4" matTooltip="Filter by the aspects the house rule modifies.">
+              <h2>
+                Modified Aspects
+              </h2>
+            </mat-label>
+          <tag-pill style="margin-right: 10px; margin-bottom: 10px; cursor: pointer" (click)="activateTag(tag)"
+                    *ngFor="let tag of DBTags" [tag]="tag" [active]="tag.active">
+          </tag-pill>
+        </div>
+        <div class="col-3 d-none d-lg-block">
+
+        </div>
+        <div class="col-12 d-flex flex-wrap">
+          <mat-label class="mx-4" matTooltip="Filter by the categories of the modified game.">
+            <h2>
+              Game Categories
+            </h2>
+          </mat-label>
+          <tag-pill style="margin-right: 10px; margin-bottom: 10px; cursor: pointer" (click)="activateTag(tag)"
+                    *ngFor="let tag of DBCats" [tag]="tag" [active]="tag.active">
+          </tag-pill>
+        </div>
+
+        <mat-form-field class="" *ngIf="!forProfile">
+          <mat-label>
+            House Rule Author Name
+          </mat-label>
+          <input type="text" matInput [(ngModel)]="authorSearch" (ngModelChange)="filter()">
+        </mat-form-field>
+
+        <mat-form-field class="">
+          <mat-label>
+            Game Designer
+          </mat-label>
+          <input type="text" matInput [(ngModel)]="designerSearch" (ngModelChange)="filter()">
+        </mat-form-field>
+      </div>
+
+    </mat-expansion-panel>
+  </mat-accordion>
+</div>

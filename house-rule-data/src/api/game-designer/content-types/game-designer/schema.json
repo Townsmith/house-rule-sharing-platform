@@ -1,0 +1,25 @@
+{
+  "kind": "collectionType",
+  "collectionName": "game_designers",
+  "info": {
+    "singularName": "game-designer",
+    "pluralName": "game-designers",
+    "displayName": "Game Designer"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "name": {
+      "type": "string",
+      "unique": true
+    },
+    "game_infos": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::game-info.game-info",
+      "mappedBy": "game_designers"
+    }
+  }
+}

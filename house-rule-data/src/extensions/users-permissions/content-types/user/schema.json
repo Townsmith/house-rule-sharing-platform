@@ -1,0 +1,140 @@
+{
+  "kind": "collectionType",
+  "collectionName": "up_users",
+  "info": {
+    "name": "user",
+    "description": "",
+    "singularName": "user",
+    "pluralName": "users",
+    "displayName": "User"
+  },
+  "options": {
+    "draftAndPublish": false,
+    "timestamps": true
+  },
+  "attributes": {
+    "username": {
+      "type": "string",
+      "minLength": 3,
+      "unique": true,
+      "configurable": false,
+      "required": true
+    },
+    "email": {
+      "type": "email",
+      "minLength": 6,
+      "configurable": false,
+      "required": true
+    },
+    "provider": {
+      "type": "string",
+      "configurable": false
+    },
+    "password": {
+      "type": "password",
+      "minLength": 6,
+      "configurable": false,
+      "private": true
+    },
+    "resetPasswordToken": {
+      "type": "string",
+      "configurable": false,
+      "private": true
+    },
+    "confirmationToken": {
+      "type": "string",
+      "configurable": false,
+      "private": true
+    },
+    "confirmed": {
+      "type": "boolean",
+      "default": false,
+      "configurable": false
+    },
+    "blocked": {
+      "type": "boolean",
+      "default": false,
+      "configurable": false
+    },
+    "role": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "plugin::users-permissions.role",
+      "inversedBy": "users",
+      "configurable": false
+    },
+    "favorite_rules": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::house-rule.house-rule",
+      "inversedBy": "user_favorites"
+    },
+    "house_rules": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::house-rule.house-rule",
+      "mappedBy": "author"
+    },
+    "liked_rules": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::house-rule.house-rule",
+      "inversedBy": "user_likes"
+    },
+    "disliked_rules": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::house-rule.house-rule",
+      "inversedBy": "user_dislikes"
+    },
+    "liked_reviews": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::review.review",
+      "inversedBy": "user_likes"
+    },
+    "disliked_reviews": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::review.review",
+      "inversedBy": "user_dislikes"
+    },
+    "professional": {
+      "type": "boolean"
+    },
+    "title": {
+      "type": "enumeration",
+      "enum": [
+        "Board Game Professional",
+        "Board Game Designer",
+        "Board Game Publisher",
+        "Hobbyist Board Gamer",
+        "Expert Board Gamer",
+        "Casual Board Gamer"
+      ]
+    },
+    "avatar": {
+      "type": "media",
+      "multiple": false,
+      "required": false,
+      "allowedTypes": [
+        "images"
+      ]
+    },
+    "bggUserName": {
+      "type": "string"
+    },
+    "reviews": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::review.review",
+      "mappedBy": "author"
+    },
+    "comments": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::comment.comment",
+      "mappedBy": "author"
+    }
+  }
+}

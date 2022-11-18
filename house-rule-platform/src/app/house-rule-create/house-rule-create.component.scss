@@ -1,0 +1,42 @@
+.thumbnail-preview {
+  max-width: 100%;
+  max-height: 100%;
+  border-radius: 10px;
+}
+
+.advanced-options {
+  border: 1px solid var(--light-tb)
+}
+
+
+
+.uploadContainer {
+  height: auto;
+  min-height: 100px;
+  border-radius: 10px;
+  padding: 10px;
+  border: 2px dashed darkgrey;
+  cursor: pointer;
+}
+
+.color-red {
+  color: red !important;
+}
+
+.step-button {
+  cursor: pointer;
+  border-radius: 10px;
+  padding: 10px;
+}
+
+.active-step {
+  color: var(--primary-tb);
+  outline: 3px solid var(--primary-tb);
+}
+
+.disabled-step {
+  color: var(--light-tb);
+  cursor: not-allowed;
+  background-color: var(--dark-tb);
+  outline: 3px solid var(--light-tb);
+}

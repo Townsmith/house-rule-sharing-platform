@@ -1,0 +1,516 @@
+<div class="row d-flex pt-5 justify-content-evenly">
+  <div class="col-5 text-center pb-3 " (click)="activeStep = 'create'">
+    <div class="step-button mat-shadow d-flex align-items-center"
+         [class.active-step]="activeStep === 'create'"
+         [class.warn-outline]="houseRuleFormGroup.touched && houseRuleFormGroup.invalid && showStepError">
+        <span class="material-icons" style="margin-right: 10px">
+          looks_one
+        </span>
+      <h2 class="m-0">
+        Create
+      </h2>
+    </div>
+  </div>
+
+  <button mat-fab color="primary" class="col-2"
+          matTooltipPosition="left"
+          [disabled]="!houseRuleFormGroup.valid"
+          matTooltip="{{!houseRuleFormGroup.valid ? 'Please fill in all required fields!' : 'Click to change between create and preview'}}"
+          (click)="togglePreview()">
+        <span class="material-icons">
+          swap_horiz
+        </span>
+  </button>
+
+  <div class="col-5 text-center pb-3 " >
+    <div class="step-button mat-shadow d-flex align-items-center"
+         (click)="this.changeToPreview()"
+         [class.active-step]="activeStep === 'preview'"
+         [class.disabled-step]="!houseRuleFormGroup.valid"
+         matTooltip="{{!houseRuleFormGroup.valid ? 'Please fill in all required fields!' : 'Click to preview your house rule.'}}">
+        <span class="material-icons" style="margin-right: 10px">
+          looks_two
+        </span>
+      <h2 class="m-0">
+        Preview
+      </h2>
+    </div>
+  </div>
+
+</div>
+<!--CREATE MODE-->
+<form [formGroup]="houseRuleFormGroup" *ngIf="activeStep === 'create'">
+  <div class="row lighter-container mt-3 pb-3" style="padding-top: 12px">
+
+<!--      Hausregel Title-->
+      <div class=" col-12 flex-column d-flex pb-3">
+        <div class="form-container">
+          <mat-form-field class="w-100">
+            <mat-label for='title'>
+              House Rule Title (required)
+<!--              <ng-container *ngIf="title.invalid && title.touched">-->
+<!--                (required)-->
+<!--              </ng-container>-->
+            </mat-label>
+            <input matInput id="title" type="text" [formControl]="title">
+          </mat-form-field>
+          <div class="d-flex align-items-center">
+        <span class="material-icons" style="margin-right: 10px; color: darkgrey">
+          info_outline
+        </span>
+            <p class="text-muted m-0">
+              Please be concise and clear in your title
+            </p>
+          </div>
+
+        </div>
+      </div>
+
+<!--      BGG Game-->
+      <div class=" col-12 col-lg-6 flex-column d-flex pb-3">
+        <div class="form-container d-flex flex-column">
+          <div class="d-flex w-100">
+            <div class="flex-grow-1" style="margin-right: 30px">
+              <mat-form-field class="w-100">
+                <mat-label for='BGG Title'>
+                  Board Game Title (required)
+<!--                  <ng-container *ngIf="BGGTitle.invalid && BGGTitle.touched || bggBoardGame.invalid && bggBoardGame.touched">-->
+<!--                    (required)-->
+<!--                  </ng-container>-->
+                </mat-label>
+                <input matInput id="BGG Title" type="text" [formControl]="BGGTitle" (submit)="searchBGGByName()">
+              </mat-form-field>
+            </div>
+            <div class="flex-shrink-0">
+              <button type="submit" mat-fab color="primary"
+                      matTooltip="Search"
+                      matTooltipPosition="left"
+                      (click)="searchBGGByName()">
+              <span class="material-icons">
+                search
+              </span>
+              </button>
+            </div>
+          </div>
+
+          <div class="row d-flex px-3 overflow-auto" style="max-height: 30vh" [@awardAnimations]="potentialBoardGames.length" [class.warn-outline]="bggBoardGame.invalid && showStepError">
+            <div class="col-12" *ngIf="potentialBoardGames.length === 0 && BGGTitle.touched && BGGTitle.valid" >
+              <p class="color-red">
+                Please press enter or the search button to search for the board game you entered.
+              </p>
+            </div>
+            <div class="col-xl-4 col-md-6 col-12 pb-3"
+                 *ngFor="let bg of potentialBoardGames">
+              <div class="d-flex justify-content-center bg-card" (click)="selectBGGGame(bg)" [class.active]="bggBoardGame.value === bg">
+                <h3 class="m-0">{{bg.name?._value}} ({{bg.yearpublished?._value}})</h3>
+                <a matTooltip="Learn more on BoardGameGeek.com" target="_blank" href="https://boardgamegeek.com/boardgame/{{bg._id}}" (click)="$event.stopPropagation();">
+                      <span class="mx-1 material-icons">
+                        contact_support
+                      </span>
+                </a>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+
+      <!--      Thumbnail-->
+      <div class="col-12 col-lg-6 flex-column d-flex pb-3">
+        <div class="form-container">
+          <div class="w-100 h-90 d-flex justify-content-center align-items-center uploadContainer"
+               (click)="startFileUpload()">
+            <ng-container *ngIf="thumbnail === undefined">
+              <h4 style="margin-bottom: 0; margin-right: 10px">Upload {{thumbnail !== undefined ? 'different' : ''}}
+                Thumbnail</h4>
+              <span class="material-icons">image</span>
+            </ng-container>
+            <ng-container *ngIf="thumbnail !== undefined">
+              <img id="thumbnailPreview" class="thumbnail-preview">
+            </ng-container>
+          </div>
+
+          <div class="h-10 d-flex align-items-center mt-2" *ngIf="thumbnail !== undefined">
+            <h4 style="margin-bottom: 0; margin-right: 10px">Upload {{thumbnail !== undefined ? 'different' : ''}}
+              Thumbnail</h4>
+            <span class="material-icons" style="margin-right: 10px; color: darkgrey">
+              info_outline
+            </span>
+            <p class="text-muted m-0">
+              Click on the thumbnail to upload a different one.
+            </p>
+          </div>
+          <!--          <div class="w-100 mt-2 d-flex align-items-center" *ngIf="thumbnail !== undefined">-->
+          <!--            -->
+          <!--          </div>-->
+          <input class="d-none" (change)="thumbnailUploaded($event)" type="file" id="imageUploader"
+                 accept=".png, .PNG, .jpg, .JPG">
+        </div>
+      </div>
+
+<!--    Gallery-->
+      <div class="col-12 col-lg-3 flex-column d-flex pb-3">
+        <div class="form-container">
+          <div class="w-100 h-90 d-flex justify-content-center align-items-center uploadContainer"
+               (click)="startFileUpload2()">
+            <h4 style="margin-bottom: 0; margin-right: 10px">Upload Gallery Images</h4>
+              <span class="material-icons">image</span>
+          </div>
+
+          <div class="h-10 d-flex align-items-center mt-2 text-muted">
+            <span class="material-icons" style="margin-right: 10px; color: darkgrey">
+              info_outline
+            </span>
+            Upload any number of images to be displayed as a gallery.
+          </div>
+          <input class="d-none" (change)="galleryUploaded($event)" type="file" id="imageUploader2"
+                 multiple
+                 accept=".png, .PNG, .jpg, .JPG">
+        </div>
+      </div>
+
+    <div class="col-12 col-lg-9 pb-3">
+      <div class="form-container overflow-auto d-flex mw-100 flex-row">
+        <div *ngFor="let img of galleryIMGs | keyvalue" class="mx-1 position-relative">
+          <img style="max-height: 200px; max-width: 200px;" [src]="img.value">
+          <button matTooltip="Remove image from gallery" class="button-primary position-absolute" style="top: 0; right: 0" (click)="removeFromGallery(img.key)">
+            <span class="material-icons">
+              clear
+            </span>
+          </button>
+        </div>
+      </div>
+
+    </div>
+
+<!--      Description-->
+      <div class=" col-12 flex-column d-flex pb-3">
+        <div class="form-container">
+          <mat-form-field class="w-100">
+            <mat-label for="description">
+              Description (required)
+<!--              <ng-container *ngIf="description.invalid && description.touched">-->
+<!--                (required)-->
+<!--              </ng-container>-->
+            </mat-label>
+            <textarea style="min-height: 20vh" matInput id="description" type="text"
+                      [formControl]="description"></textarea>
+          </mat-form-field>
+          <div class="d-flex align-items-center">
+        <span class="material-icons" style="margin-right: 10px; color: darkgrey">
+          info_outline
+        </span>
+            <p class="text-muted m-0">
+              Along with a brief overview of what the rule does, please go into as much detail as necessary.
+            </p>
+          </div>
+        </div>
+      </div>
+
+    <!--      Tags-->
+    <div class="col-12 flex-column d-flex pb-3" >
+      <div class="form-container" [class.warn-outline]="tags.invalid && tags.touched">
+        <div class="row">
+          <div class="col-12 mb-3">
+            <mat-label style="margin-bottom: 0.4rem">
+              Content Tags (3 required)
+            </mat-label>
+          </div>
+          <div class="col-12 d-flex flex-wrap">
+            <tag-pill style="margin-right: 10px; margin-bottom: 10px; cursor: pointer" (click)="activateTag(tag)"
+                      *ngFor="let tag of DBTags" [tag]="tag" [active]="tag.active">
+            </tag-pill>
+          </div>
+          <div class="col-12 mt-2">
+            <div class="d-flex align-items-center mt-2">
+                <span class="material-icons" style="margin-right: 10px; color: darkgrey">
+                  info_outline
+                </span>
+              <p class="text-muted m-0">
+                Please select any number of tags that describe what your house rule is about and what aspects it
+                modifies.
+              </p>
+            </div>
+          </div>
+        </div>
+
+
+      </div>
+    </div>
+
+      <!--      Playtesting-->
+      <div class="col-lg-3 col-12 flex-column d-flex pb-3">
+        <div class="form-container">
+          <div class="d-flex">
+            <mat-slide-toggle id="testing" color="primary" [formControl]="testing">
+              Playtesting Mode
+            </mat-slide-toggle>
+          </div>
+          <div class="d-flex align-items-center mt-2">
+        <span class="material-icons" style="margin-right: 10px; color: darkgrey">
+          info_outline
+        </span>
+            <p class="text-muted m-0">
+              If enabled, your house rule will only be shown to users interested in testing and providing feedback.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!--      Complexity-->
+      <div class=" col-lg-3 col-12 flex-column d-flex pb-3">
+        <div class="form-container" [class.warn-outline]="complexity.invalid && complexity.touched">
+          <div class="col-12 mb-3">
+            <mat-label for="complexity" style="margin-bottom: 0.4rem">
+              Complexity (required)
+            </mat-label>
+          </div>
+          <mat-radio-group color="primary" id="complexity" [formControl]="complexity">
+            <mat-radio-button *ngFor="let i of [1,2,3,4,5]" value="{{i}}" style="margin-right: 0.5rem">
+              {{i}}
+            </mat-radio-button>
+          </mat-radio-group>
+          <div class="d-flex align-items-center mt-2">
+            <span class="material-icons" style="margin-right: 10px; color: darkgrey">
+              info_outline
+            </span>
+            <p class="text-muted m-0">
+              Rate your rule's complexity.
+            </p>
+          </div>
+        </div>
+      </div>
+
+    <!--      Custom Tags-->
+    <div class="col-12 col-lg-6 flex-column d-flex pb-3">
+      <div class="form-container">
+        <div class="row">
+          <div class="col-12 mb-3">
+            <mat-label style="margin-bottom: 0.4rem">
+              Custom Tags
+            </mat-label>
+          </div>
+          <div class="col-12">
+            <div class="row">
+              <tag-pill [showRemove]="true" *ngFor="let tag of userAddedTagsArray"
+                        (close)="removeFromUserAddedTags(tag)" [tag]="tag">
+              </tag-pill>
+            </div>
+          </div>
+          <div class="col-12">
+            <mat-form-field style="margin-right: 10px">
+              <input matInput id="userAddedTags" type="text" [formControl]="userAddedTags">
+            </mat-form-field>
+            <button matTooltip="Add tag" matTooltipPosition="right" mat-mini-fab color="primary"
+                    (click)="addToUserTags()"
+                    [disabled]="userAddedTags.value === ''">
+          <span class="material-icons">
+            add
+          </span>
+            </button>
+          </div>
+          <div class="col-12 mt-2 d-flex align-items-center">
+        <span class="material-icons" style="margin-right: 10px; color: darkgrey">
+          info_outline
+        </span>
+            <p class="text-muted m-0">
+              Enter any text and press the + button to add the tag
+            </p>
+          </div>
+        </div>
+
+
+      </div>
+    </div>
+
+
+
+
+<!--      ADVANCED-->
+
+      <mat-accordion >
+        <mat-expansion-panel class="advanced-options">
+          <mat-expansion-panel-header>
+            <h3 class="m-0">Advanced Options</h3>
+          </mat-expansion-panel-header>
+
+          <div class=" col-12 flex-column d-flex pb-3">
+            <div class="form-container">
+              <mat-form-field class="w-100">
+                <mat-label for='parent'>
+                  Variant/Version of another Rule
+                </mat-label>
+                <input matInput id="parent" type="text" [formControl]="parent">
+              </mat-form-field>
+              <div class="d-flex align-items-center">
+        <span class="material-icons" style="margin-right: 10px; color: darkgrey">
+          info_outline
+        </span>
+                <p class="text-muted m-0">
+                  If your rule is a new version or inspired by or a variant of another rule, please paste the link to this rule here. (for example: http://localhost:4200/rule/21)
+                </p>
+              </div>
+
+            </div>
+          </div>
+
+          <div class=" col-12 flex-column d-flex pb-3">
+            <div class="form-container">
+              <mat-form-field class="w-100">
+                <mat-label for='Version'>
+                  House Rule Version Number
+                </mat-label>
+                <input matInput id="Version" type="number" [formControl]="version">
+              </mat-form-field>
+              <div class="d-flex align-items-center">
+            <span class="material-icons" style="margin-right: 10px; color: darkgrey">
+              info_outline
+            </span>
+                <p class="text-muted m-0">
+                  If your house rule is an improved version of another rule, please enter its version number here. Leave blank if the rule is a variant or new.
+                </p>
+              </div>
+
+            </div>
+          </div>
+
+          <div class=" col-12 flex-column d-flex pb-3">
+            <div class="form-container">
+              <mat-form-field class="w-100">
+                <mat-label for='video_embedding'>
+                  YouTube Link
+                </mat-label>
+                <input matInput id="video_embedding" type="text" [formControl]="video_embedding">
+              </mat-form-field>
+              <div class="d-flex align-items-center">
+        <span class="material-icons" style="margin-right: 10px; color: darkgrey">
+          info_outline
+        </span>
+                <p class="text-muted m-0">
+                  If you want to add a video to your house rule, please upload it to YouTube and enter the link to it here!
+                </p>
+              </div>
+
+            </div>
+          </div>
+
+          <div class=" col-12 flex-column d-flex pb-3">
+            <div class="form-container">
+              <mat-form-field class="w-100">
+                <mat-label for='official_embedding'>
+                  Official Rules Link
+                </mat-label>
+                <input matInput id="official_embedding" type="text" [formControl]="officialRulesLink">
+              </mat-form-field>
+              <div class="d-flex align-items-center">
+        <span class="material-icons" style="margin-right: 10px; color: darkgrey">
+          info_outline
+        </span>
+                <p class="text-muted m-0">
+                  If you reference the official game rules, please link to them here.
+                </p>
+              </div>
+
+            </div>
+          </div>
+
+          <div class=" col-12 flex-column d-flex pb-3">
+            <div class="form-container">
+              <mat-form-field class="w-100">
+                <mat-label for='officalRules'>
+                  Official Rules References
+                </mat-label>
+                <input matInput id="officalRules" type="text" [formControl]="officialRulesDescription">
+              </mat-form-field>
+              <div class="d-flex align-items-center">
+            <span class="material-icons" style="margin-right: 10px; color: darkgrey">
+              info_outline
+            </span>
+                <p class="text-muted m-0">
+                  Describe were in the official rules of the game one can find the aspects you modified. For example, you
+                  could state the page and paragraph that your rule modifies.
+                </p>
+              </div>
+
+            </div>
+          </div>
+        </mat-expansion-panel>
+      </mat-accordion>
+  </div>
+
+</form>
+
+<!--PREVIEW MODE-->
+<ng-container *ngIf="activeStep === 'preview'">
+  <div class="col-12 py-3 d-flex align-items-center">
+    <span class="material-icons" style="margin-right: 10px; color: darkgrey">
+      info_outline
+    </span>
+    <p class="text-muted m-0">
+      This is a preview of the house rule's detail page. Please confirm that all information is correct and looks as you want it before saving the house rule.
+    </p>
+  </div>
+  <div class="col-12 row">
+    <div class="col-12">
+      <h1>
+        Card Preview (used for search and explore)
+      </h1>
+    </div>
+    <house-rule-card class="col-12 col-lg-6" [hr]="hr" [preview]="true">
+    </house-rule-card>
+  </div>
+  <hr>
+
+  <h1>
+    Detail Preview
+  </h1>
+  <house-rule-view [hr]="hr" [preview]="true">
+  </house-rule-view>
+  <hr>
+</ng-container>
+
+<div class="col-12 light py-3 d-flex justify-content-between">
+  <div class="d-flex flex-grow-1 align-items-center" *ngIf="activeStep === 'create'">
+              <span class="material-icons" style="margin-right: 10px; color: darkgrey"
+                    [class.color-red]="houseRuleFormGroup.touched && houseRuleFormGroup.invalid">
+          info_outline
+        </span>
+      <p class="text-muted m-0" [class.color-red]="houseRuleFormGroup.touched && !houseRuleFormGroup.valid">
+        Please fill out all required fields before creating the new house rule
+      </p>
+  </div>
+
+  <div class="d-flex" style="min-width: 20vw">
+    <button class="button-primary next-save-buton" *ngIf="activeStep === 'preview'"
+            (click)="activeStep = 'create'">
+            <span class="material-icons mx-2">
+          west
+        </span>
+      Back
+    </button>
+  </div>
+
+<!--  Save/Next Buttons-->
+  <div class="flex-shrink-0" style="min-width: 20vw"
+       matTooltipPosition="right"
+       matTooltip="{{!houseRuleFormGroup.valid ? 'Please fill in all required fields!' : 'Click to preview your house rule.'}}"
+  >
+    <button class="button-primary next-save-buton" *ngIf="activeStep === 'create'"
+            (click)="this.changeToPreview()"
+            [class.disabled]="!houseRuleFormGroup.valid">
+      Next
+      <span class="material-icons mx-2">
+          east
+        </span>
+    </button>
+    <button class="button-primary next-save-buton" *ngIf="activeStep === 'preview'"
+            (click)="onSubmit()">
+      Save
+      <span class="material-icons mx-2">
+          save
+        </span>
+    </button>
+  </div>
+
+</div>

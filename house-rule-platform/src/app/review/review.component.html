@@ -1,0 +1,52 @@
+<div class="review-card mat-shadow d-flex">
+  <div class="review-header d-flex flex-column flex-lg-row justify-content-between">
+    <div class="d-flex flex-row" style="padding-left: 0.6vw">
+      <div class="d-flex justify-content-center align-items-center" style="min-width: 1.5vw">
+        {{preview? 237 : rev?.rating}}
+      </div>
+      <div class="d-flex flex-column align-items-center">
+        <span class="material-icons action-icon" style="font-size: 30px!important;" [class.active]="reviewIsLiked(rev)" (click)="upvoteRev(rev)">keyboard_double_arrow_up</span>
+        <span class="material-icons action-icon" style="font-size: 30px!important;" [class.active]="reviewIsDisliked(rev)" (click)="downvoteRev(rev)">keyboard_double_arrow_down</span>
+      </div>
+
+      <div class="d-flex align-items-center mx-2">
+        {{rev.title}}
+      </div>
+
+      <!--        AUTHOR-->
+      <div class="d-flex align-items-center px-2">
+         <a routerLink="/user/{{rev.author.id}}">by {{rev.author.username}}</a>
+      </div>
+
+      <div class="d-flex align-items-center px-2" *ngIf="forProf">
+         <a routerLink="/rule/{{rev.house_rule}}">for {{rev.house_rule_title}}</a>
+      </div>
+
+    </div>
+    <!--        Ratings-->
+    <div class="d-flex flex-column justify-content-evenly align-items-end px-2">
+      <div class="d-flex flex-row align-items-center">
+        House Rule Quality: &nbsp;
+        <span *ngFor="let num of [].constructor(rev.quality)" class="material-icons">
+              star
+            </span>
+        <span *ngFor="let num of [].constructor(5-rev.quality)" class="material-icons">
+              star_outline
+            </span>
+      </div>
+      <div class="d-flex flex-row align-items-center">
+        House Rule Complexity: &nbsp;
+        <span *ngFor="let num of [].constructor(rev.complexity)" class="material-icons">
+              settings_applications
+            </span>
+        <span *ngFor="let num of [].constructor(5-rev.complexity)" class="material-icons">
+              crop_square
+            </span>
+      </div>
+    </div>
+
+  </div>
+  <div class="p-3 overflow-hidden">
+    {{rev.description}}
+  </div>
+</div>

@@ -1,0 +1,124 @@
+<!--404 for Users-->
+
+<ng-container *ngIf="notFound">
+User not found
+</ng-container>
+
+
+<!--actual profile-->
+<ng-container *ngIf="!notFound">
+
+  <div class="w-100 h-100 row m-0">
+<!--    User Name and badges and stuff-->
+    <div class="col-12 d-flex flex-column flex-lg-row justify-content-between align-items-lg-end pt-4" style="background-color: black">
+      <div class="mb-2">
+        <div style="font-size: 20px; height: 20px">
+          {{userData.username}}
+        </div>
+        <div style="font-size: 15px; color: #ff8f00">
+          {{userData.title}}
+        </div>
+      </div>
+      <div class="d-flex flex-row" style="gap: 30px">
+        <div class="flex-column d-flex">
+          <div class="d-flex flex-row align-items-center" style="gap: 5px">
+            <ng-container *ngIf="userData.bggUserName">
+              BGG User <a target="_blank" href="https://www.boardgamegeek.com/user/{{userData.bggUserName}}">{{userData.bggUserName}}</a>
+<!--              <span class="material-icons action-icon" style="font-size: 25px !important;" (click)="connectToBGG()" matTooltip="Link different BGG User" *ngIf="self">-->
+<!--              add_link-->
+<!--            </span>-->
+            </ng-container>
+            <ng-container *ngIf="!userData.bggUserName">
+              <mat-form-field>
+                <mat-label>
+                  Enter your BGG User Name
+                </mat-label>
+                <input matInput type="text" [(ngModel)]="bggUserNameInput">
+              </mat-form-field>
+              <span class="material-icons action-icon" style="font-size: 25px !important;" (click)="connectToBGG()" matTooltip="Link BGG User" *ngIf="self">
+              add_link
+            </span>
+            </ng-container>
+          </div>
+        </div>
+        <button class="button-primary" (click)="user.logout(); router.navigateByUrl('login')">
+          Logout
+        </button>
+      </div>
+    </div>
+
+    <div class="p-0" style="background-color: black">
+      <mat-tab-group animationDuration="0ms">
+        <mat-tab label="{{this.self ? 'My House Rules' : 'House Rules'}}">
+          <div class="row w-100 h-100 m-0">
+            <hr-searchbar [professional]="userData?.professional" [forProfile]="true" [fullList]="userHrs" [DBTags]="DBTags" [DBCats]="DBCats" (filteredList)="filteredUserHrs = $event">
+            </hr-searchbar>
+            <house-rule-card *ngFor="let hr of filteredUserHrs" [preview]="false" [hr]="hr" class="col-12 col-lg-6 pb-3">
+            </house-rule-card>
+            <div *ngIf="filteredUserHrs.length === 0" style="text-align: center; padding: 10vh; font-size: 20px;">
+              No house rules matched your search criteria.
+            </div>
+          </div>
+        </mat-tab>
+        <mat-tab label="Bookmarks">
+          <div class="row w-100 h-100 m-0">
+            <hr-searchbar [professional]="userData?.professional" [forProfile]="true" [fullList]="userData.favorite_rules" [DBCats]="DBCats" [DBTags]="DBTags" (filteredList)="filteredUserBookmarks = $event">
+            </hr-searchbar>
+            <house-rule-card *ngFor="let hr of filteredUserBookmarks" [preview]="false" [hr]="hr" class="col-12 col-lg-6 pb-3">
+            </house-rule-card>
+            <div *ngIf="filteredUserBookmarks.length === 0" style="text-align: center; padding: 10vh; font-size: 20px;">
+              No house rules matched your search criteria.
+            </div>
+          </div>
+        </mat-tab>
+        <mat-tab label="Reviews">
+          <div class="row w-100 h-100 m-0">
+            <div class="col-12 d-flex justify-content-between p-3">
+              <h1>Total Review Score: {{reviewScore}}</h1>
+              <h1>Total Reviews: {{reviews.length}}</h1>
+            </div>
+            <review *ngFor="let review of reviews" [rev]="review" [preview]="false" [forProf]="true">
+            </review>
+          </div>
+        </mat-tab>
+        <mat-tab label="Board Games" *ngIf="userData.bggUserName != null">
+          <div class="row w-100 h-100 m-0">
+<!--            <div class="col-6" *ngIf="user.getBGGInfo()?.hot?.item.length > 0">-->
+<!--              <h1>-->
+<!--                Hot Games-->
+<!--              </h1>-->
+<!--              <div *ngFor="let hot of user.getBGGInfo()?.hot?.item">-->
+<!--                {{hot._rank}}&nbsp;<a target="_blank" href="https://boardgamegeek.com/boardgame/{{hot._id}}">{{hot._name}}</a>-->
+<!--              </div>-->
+<!--            </div>-->
+<!--            <div class="col-6" *ngIf="user.getBGGInfo()?.top?.item.length > 0">-->
+<!--              <h1>-->
+<!--                Top Games-->
+<!--              </h1>-->
+<!--              <div *ngFor="let top of user.getBGGInfo()?.top?.item">-->
+<!--                {{top._rank}}&nbsp;<a target="_blank" href="https://boardgamegeek.com/boardgame/{{top._id}}">{{top._name}}</a>-->
+<!--              </div>-->
+<!--            </div>-->
+            <div class="col-12">
+              <h1>
+                Owned Games ({{user.bggCollection?.length}})
+              </h1>
+              <div class="row">
+                <div *ngFor="let bg of user.bggCollection" class="col-12 col-lg-4 flex-wrap">
+                  <a target="_blank" href="https://boardgamegeek.com/boardgame/{{bg._objectid}}">{{bg.name.__text}}</a>
+                </div>
+              </div>
+
+            </div>
+            <div class="col-12 p-5">
+              Check out <a target="_blank" href="https://boardgamegeek.com/user/{{userData.bggUserName}}">{{userData.bggUserName}} on BoardGameGeek</a>
+            </div>
+          </div>
+        </mat-tab>
+      </mat-tab-group>
+    </div>
+  </div>
+
+</ng-container>
+
+
