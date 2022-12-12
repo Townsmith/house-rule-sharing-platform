@@ -97,7 +97,7 @@ export class HrSearchbarComponent implements OnInit {
       res = res.filter(x => x.gameInfoFilled.game_designers.some(x => x.name.includes(this.designerSearch)));
     }
     if (this.owned) {
-      res = res.filter(x => this.user.bggCollection.some(y => y._objectid === x.BGGGameID));
+      res = res.filter(x => this.user.bggCollection.some(y => y._objectid == x.BGGGameID));
     }
     this.lastFilter = res;
     this.sort(explore);
@@ -107,8 +107,8 @@ export class HrSearchbarComponent implements OnInit {
     this.lastFilter = this.lastFilter.sort(this.getSortingFct(this.sorting, this.ascending));
     const filt = [];
     if (explore) {
-      let length = 10;
-      if (this.lastFilter.length < 10) {
+      let length = 4;
+      if (this.lastFilter.length < 4) {
         length = this.lastFilter.length;
       }
       for (let x = 0; x < length; x ++) {

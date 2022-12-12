@@ -24,9 +24,9 @@ User not found
           <div class="d-flex flex-row align-items-center" style="gap: 5px">
             <ng-container *ngIf="userData.bggUserName">
               BGG User <a target="_blank" href="https://www.boardgamegeek.com/user/{{userData.bggUserName}}">{{userData.bggUserName}}</a>
-<!--              <span class="material-icons action-icon" style="font-size: 25px !important;" (click)="connectToBGG()" matTooltip="Link different BGG User" *ngIf="self">-->
-<!--              add_link-->
-<!--            </span>-->
+              <span class="material-icons action-icon" style="font-size: 25px !important;" (click)="this.userData.bggUserName = undefined; this.bggUserName = undefined;" matTooltip="Link different BGG User" *ngIf="self">
+              link_off
+            </span>
             </ng-container>
             <ng-container *ngIf="!userData.bggUserName">
               <mat-form-field>
@@ -36,8 +36,8 @@ User not found
                 <input matInput type="text" [(ngModel)]="bggUserNameInput">
               </mat-form-field>
               <span class="material-icons action-icon" style="font-size: 25px !important;" (click)="connectToBGG()" matTooltip="Link BGG User" *ngIf="self">
-              add_link
-            </span>
+                add_link
+              </span>
             </ng-container>
           </div>
         </div>

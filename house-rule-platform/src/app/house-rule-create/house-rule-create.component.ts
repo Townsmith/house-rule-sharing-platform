@@ -325,6 +325,10 @@ export class HouseRuleCreateComponent implements OnInit {
     this.loader.loading = true;
     const attributes = this.houseRuleFormGroup.value;
 
+    if (attributes.version == "") {
+      attributes.version = 0;
+    }
+
     attributes.author = this.user.getID();
 
     if (this.thumbnail !== undefined) {
@@ -364,18 +368,25 @@ export class HouseRuleCreateComponent implements OnInit {
     attributes.userAddedTags = this.userAddedTagsArray;
     attributes.video_embedding = attributes.video_embedding.replace('watch?v=', 'embed/');
     if (this.parent.value) {
-      debugger;
       attributes.parent = this.parent.value.split('/').at(-1);
+    } else {
+      attributes.parent = undefined;
     }
 
 
     this.hr = new HouseRuleFilled({id: undefined, attributes});
 
+    if (this.parent.value) {
+      this.hr.parent = this.parent.value.split('/').at(-1);
+    } else {
+      this.hr.parent = undefined;
+    }
+
     let gameInfo;
     let gameInfoID;
     gameInfo = await this.back.getGameInfoByBGGID(this.hr.BGGGameID);
     let tooOld = false;
-    if (gameInfo !== null) {
+    if (gameInfo != null) {
       const aMonth = new Date(new Date().getTime() - (1000 * 60 * 60 * 24 * 30));
       const age = new Date(gameInfo.attributes.createdAt);
       tooOld = age < aMonth;
@@ -383,7 +394,10 @@ export class HouseRuleCreateComponent implements OnInit {
 
     if (gameInfo == null || tooOld) {
       const bgInfo = await this.back.getBoardGameV1ByID(this.hr.BGGGameID);
-      const categories = bgInfo.boardgamecategory;
+      let categories = bgInfo.boardgamecategory;
+      if (!isArray(categories)) {
+        categories = [categories];
+      }
       const catIds = await this.back.addCategories(categories);
       let designer = bgInfo.boardgamedesigner;
       if (!isArray(designer)) {
@@ -398,11 +412,18 @@ export class HouseRuleCreateComponent implements OnInit {
         BGGGameID: bgInfo._objectid,
         thumbnail: bgInfo.thumbnail,
         game_categories: catIds,
-        game_designers: designerIds
+        game_designers: designerIds,
+        id: undefined
       }
       // @ts-ignore
       this.hr.gameInfoFilled = gameInfoFOrDB;
-      gameInfoID = await this.back.addGameInfo(gameInfoFOrDB);
+      debugger;
+      if (tooOld) {
+        gameInfoFOrDB.id = gameInfo.id;
+        gameInfoID = await this.back.updateGameInfo(gameInfoFOrDB);
+      } else {
+        gameInfoID = await this.back.addGameInfo(gameInfoFOrDB);
+      }
       gameInfo = gameInfoFOrDB;
     } else {
       gameInfoID = gameInfo.id;

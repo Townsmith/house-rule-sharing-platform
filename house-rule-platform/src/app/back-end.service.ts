@@ -388,6 +388,21 @@ export class BackEndService {
     }
   }
 
+  async updateGameInfo(gameInfo: any) {
+    try {
+      const response = await axios.put(`${this.targetURL}game-infos/${gameInfo.id}`, {data: gameInfo}, {
+        headers: {
+          Authorization:
+              `Bearer ${localStorage.getItem('token')}`
+        }
+      });
+      // @ts-ignore
+      return response.data.data.id;
+    } catch (e) {
+      console.error(e);
+    }
+  }
+
   async getGameInfoByBGGID(bggID: any) {
     try {
       const response = await axios.get(`${this.targetURL}game-infos?filters[BGGGameID][$eq]=${bggID}`, {

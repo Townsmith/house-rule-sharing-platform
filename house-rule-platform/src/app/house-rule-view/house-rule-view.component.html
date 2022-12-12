@@ -125,7 +125,7 @@
           <div style="font-size: 15px">
             <!--          Parent Link-->
             <ng-container *ngIf="hr?.parentFilled">
-              {{hr?.version ? "Version " + hr?.version + " of" : "Variant of"}}&nbsp;
+              {{hr?.version !== 0 ? "Version " + hr?.version + " of" : "Variant of"}}&nbsp;
               <a href="http://localhost:4200/rule/{{hr?.parent}}">
                 {{hr?.parentFilled?.title}}
               </a>
@@ -190,7 +190,7 @@
 
     <div class="col-12">
       <div style="background-color: black;" class="d-flex justify-content-center align-items-center">
-        <ngb-carousel *ngIf="hr.galleryData">
+        <ngb-carousel *ngIf="hr.galleryData?.length > 0">
           <ng-template ngbSlide *ngFor="let img of hr.galleryData">
             <div class="picsum-img-wrapper">
               <img style="max-height: 30vh" height="auto" [src]="environment.fileURL + '' + this.getBestImg(img)" alt="Random first slide" />

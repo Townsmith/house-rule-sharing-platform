@@ -76,6 +76,8 @@ export class ProfileComponent implements OnInit {
       }
     }
 
+    window.location.reload();
+
     this.loading.loading = false;
   }
 }
